@@ -9,10 +9,20 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Direction",
+"language": "GDScript",
+"path": "res://scripts/Direction.gd"
+}, {
 "base": "Node2D",
 "class": "LevelObject",
 "language": "GDScript",
 "path": "res://levels/LevelObject.gd"
+}, {
+"base": "Node",
+"class": "MapManager",
+"language": "GDScript",
+"path": "res://scripts/MapManager.gd"
 }, {
 "base": "Node",
 "class": "PlaceableType",
@@ -20,9 +30,14 @@ _global_script_classes=[ {
 "path": "res://scripts/SeedType.gd"
 }, {
 "base": "Node",
-"class": "SeedObject",
+"class": "PlacedObject",
 "language": "GDScript",
-"path": "res://scripts/SeedObject.gd"
+"path": "res://scripts/PlacedObject.gd"
+}, {
+"base": "Node",
+"class": "PlacedStack",
+"language": "GDScript",
+"path": "res://scripts/PlacedStack.gd"
 }, {
 "base": "Node",
 "class": "SeedStore",
@@ -30,9 +45,12 @@ _global_script_classes=[ {
 "path": "res://scripts/SeedStore.gd"
 } ]
 _global_script_class_icons={
+"Direction": "",
 "LevelObject": "",
+"MapManager": "",
 "PlaceableType": "",
-"SeedObject": "",
+"PlacedObject": "",
+"PlacedStack": "",
 "SeedStore": ""
 }
 

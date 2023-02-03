@@ -4,6 +4,7 @@ class_name LevelObject extends Node2D
 var seed_store: SeedStore=SeedStore.new()
 var dirt_tilemap: TileMap
 var obstacle_tilemap: TileMap
+var required_growth_level: int
  
 func _ready():
 	pass # Replace with function body.
@@ -21,3 +22,6 @@ func get_obstacle_tilemap() -> TileMap:
 
 func get_seed_store() -> SeedStore:
 	return seed_store
+
+func get_required_growth_level() -> int:
+	return required_growth_level

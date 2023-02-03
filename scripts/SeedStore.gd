@@ -1,4 +1,10 @@
 class_name SeedStore extends Node
+
+# DESCRIPTION:
+# Seed Store keeps track of the number of seeds available in a given level
+# as well as the current positions of seeds.
+
+
 var seed_name_to_tile_map = {
 	PlaceableType.PlaceableType.EMPTY: -1,
 	PlaceableType.PlaceableType.SIMPLE:9,
@@ -27,7 +33,6 @@ var current_seed_counts = {
 	PlaceableType.PlaceableType.GREEDY:5,
 	PlaceableType.PlaceableType.TUNNELING:5,
 }
-var seed_stack = []
 
 func _ready():
 	pass # Replace with function body.

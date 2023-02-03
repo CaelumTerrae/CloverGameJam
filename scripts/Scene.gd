@@ -51,7 +51,7 @@ func load_level(level_resource_path: String):
 
 # Signal resolving functions
 func _on_seed_changed(new_seed):
-	GameManager.current_seed_in_cursor = new_seed
+	GameManager.current_object_in_cursor = new_seed
 
 func _start_watering_state():
 	GameManager.start_watering_cycle();
