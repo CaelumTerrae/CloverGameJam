@@ -1,10 +1,17 @@
 extends Node
 
+# DESCRIPTION:
+# THIS IS A SINGLETON CLASS. IT CAN BE ACCESSED ANYWHERE IN THE SCRIPT
+# SO YOU DONT HAVE TO PASS BACK A REFERENCE TO THE MANAGER 
+# This is the main housing of all of the game state logic. In other
+# words, it interfaces between different pieces of local logic
+# like how we keep track of seeds, and the map, in order to 
+# generate the overall game logic!
+
 enum GameState {MENU, PLANTING, WATERING, LOST, WON}
 
 onready var seed_store = SeedStore.new()
 onready var placed_stack = PlacedStack.new()
-onready var map_manager = MapManager.new()
 onready var current_object_in_cursor = PlaceableType.PlaceableType.SIMPLE
 onready var curr_game_state = GameState.PLANTING
 var curr_growth_level = 0
@@ -42,18 +49,17 @@ func iterate_growth():
 	for i in range(len(placed_stack.stack) - 1, -1, -1):
 		# should iterate over all of the placed objects in the stack:
 		var curr_placed_object : PlacedObject = placed_stack.stack[i]
+		# this is a list of positions that the curr_placed object wants to
+		# grow into
 		var to_place_arr = curr_placed_object.execute_grow()
-	
 		for position in to_place_arr:
-			print("positions attempting to grow into")
-			print(position)
-			if not map_manager.can_grow_into(position):
+			if not MapManager.can_grow_into(position):
 				# ATTEMPTING TO PLACE SOMEWHERE WE CANT! GAME FAILURE
 				curr_game_state = GameState.LOST
-				print("duuuuude you lost the game! that sucks a ton dude :/")
+				print("duuuuude you lost the game! that sucks a ton!")
 				return false
 			else:
-				map_manager.place_root(position)
+				MapManager.place_root(position)
 	print("made it through one iteration cycle")
 	curr_growth_level += 1
 	return true
@@ -100,7 +106,6 @@ func place_seed(tile_position):
 	if not seed_store.has_seed(current_object_in_cursor):
 		return
 	
-	
 	# always attempt to remove seed currently in the position to refund whatever is currently there
 	remove_seed(tile_position)
 	
@@ -109,7 +114,7 @@ func place_seed(tile_position):
 	
 	# use the map manager to place the seed both in abstract
 	# representation, and in tilemap simultaneously
-	var newly_placed_object = map_manager.place_object(tile_position, current_object_in_cursor)
+	var newly_placed_object = MapManager.place_object(tile_position, current_object_in_cursor)
 	placed_stack.add_placed_object(newly_placed_object)
 	print(placed_stack)
 		
@@ -118,7 +123,7 @@ func remove_seed(tile_position):
 	if curr_game_state != GameState.PLANTING:
 		return
 	# when attempting to remove a seed, update the count
-	var current_seed_in_tile_position = map_manager.remove_object(tile_position)
+	var current_seed_in_tile_position = MapManager.remove_object(tile_position)
 
 	if current_seed_in_tile_position != PlaceableType.PlaceableType.EMPTY:
 		seed_store.give_seed(current_seed_in_tile_position)
@@ -145,8 +150,15 @@ func load_level(level_node: LevelObject):
 	seed_store = level_node.get_seed_store()
 
 	# pass the tilemaps to the map manager
-	map_manager.load_level(dirt_tilemap, obstacle_tilemap, seed_tilemap)
+	MapManager.load_level(dirt_tilemap, obstacle_tilemap, seed_tilemap)
 
 func is_placeable_coord(pos: Vector2):
 	# we can update the params here if we want to make this more complicated
 	return dirt_tilemap.get_cellv(pos) == 10
+
+func construct_placed_object_from_seed_type(seed_type, representation_position):
+	match seed_type:
+		PlaceableType.PlaceableType.SIMPLE:
+			return SimplePlantObject.new(representation_position)
+	
+	return PlacedObject.new(seed_type, representation_position)

@@ -20,11 +20,6 @@ _global_script_classes=[ {
 "path": "res://levels/LevelObject.gd"
 }, {
 "base": "Node",
-"class": "MapManager",
-"language": "GDScript",
-"path": "res://scripts/MapManager.gd"
-}, {
-"base": "Node",
 "class": "PlaceableType",
 "language": "GDScript",
 "path": "res://scripts/PlaceableType.gd"
@@ -43,15 +38,20 @@ _global_script_classes=[ {
 "class": "SeedStore",
 "language": "GDScript",
 "path": "res://scripts/SeedStore.gd"
+}, {
+"base": "PlacedObject",
+"class": "SimplePlantObject",
+"language": "GDScript",
+"path": "res://scripts/plants/SimplePlantObject.gd"
 } ]
 _global_script_class_icons={
 "Direction": "",
 "LevelObject": "",
-"MapManager": "",
 "PlaceableType": "",
 "PlacedObject": "",
 "PlacedStack": "",
-"SeedStore": ""
+"SeedStore": "",
+"SimplePlantObject": ""
 }
 
 [application]
@@ -63,6 +63,7 @@ config/icon="res://assets/icon.png"
 [autoload]
 
 GameManager="*res://scripts/GameManager.gd"
+MapManager="*res://scripts/MapManager.gd"
 
 [display]
 

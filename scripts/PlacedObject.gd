@@ -36,30 +36,16 @@ func get_position() -> Vector2:
 func set_position(new_position):
 	position = new_position
 
+# should determine the first next_growth_positions of the plant
 func initialize():
-	print("determing what is getting initialized")
-	print(seed_type)
-	match seed_type:
-		PlaceableType.PlaceableType.SIMPLE:
-			initialize_simple()
+	# this is intentionally a stub and should be overwritten by the specific plant object
+	print("called initialize on PlacedObject instead of specific PlantObject (e.g. SimplePlantObject")
 
-func initialize_simple():
-	match direction_facing:
-		Direction.Direction.NORTH:
-			next_growth_positions = [position + Vector2(0,-1)]
-		Direction.Direction.SOUTH:
-			next_growth_positions = [position + Vector2(0,1)]
-		Direction.Direction.EAST:
-			next_growth_positions = [position + Vector2(1,0)]
-		Direction.Direction.WEST:
-			next_growth_positions = [position + Vector2(-1,0)]
-
-# return the places we would like to place roots 
+# returns the places that the plant would like to grow, and
+# updates next_growth_positions
 func execute_grow():
-	# delegate to a helper function
-	match seed_type:
-		PlaceableType.PlaceableType.SIMPLE:
-			return execute_grow_simple()
+	# this is intentionally a stub and should be overwritten by the specific plant object
+	print("called execute_grow on PlacedObject instead of specific PlantObject (e.g. SimplePlantObject")
 
 func execute_grow_simple():
 	var temp = next_growth_positions[0]
@@ -73,6 +59,3 @@ func execute_grow_simple():
 		Direction.Direction.WEST:
 			next_growth_positions = [temp + Vector2(-1,0)]
 	return [temp]
-
-
-

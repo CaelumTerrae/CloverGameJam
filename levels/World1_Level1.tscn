@@ -10,7 +10,7 @@ script = ExtResource( 2 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 131080, 16, 0, 131081, 17, 0, 131082, 10, 0, 131083, 18, 0, 196616, 19, 0, 196617, 10, 0, 196618, 10, 0, 196619, 20, 0, 262152, 21, 0, 262153, 22, 0, 262154, 22, 0, 262155, 23, 0 )
+tile_data = PoolIntArray( 131082, 10, 0, 196617, 10, 0, 196618, 10, 0 )
 
 [node name="ObstacleMap" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )

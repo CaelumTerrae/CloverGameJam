@@ -1,12 +1,11 @@
-class_name MapManager extends Node
+extends Node
 
 # DESCRIPTION:
+# THIS IS A SINGLETON CLASS. IT CAN BE ACCESSED ANYWHERE IN THE SCRIPT
+# SO YOU DONT HAVE TO PASS BACK A REFERENCE TO THE MANAGER
 # This is the interface between the abstract representation of what should
 # be placed on different tilemap layers, and what will be stored in the 
 # abstract representation used to deal with game state.
-
-# Eseentially, we want to decouple the tile_map used for rendering tile
-# sprites and the notion of obstacles. 
 
 # This will give us the ability to simplify logic, and also add skins for
 # different levels or whatnot
@@ -152,8 +151,8 @@ func place_object(pos_from_tilemap, current_object_in_cursor):
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
 
-	# create newly placed object
-	return PlacedObject.new(current_object_in_cursor, representation_position)
+	# create newly placed object with reference to the current map manager
+	return GameManager.construct_placed_object_from_seed_type(current_object_in_cursor, representation_position)
 
 # removes object and returns whatever was formerly there
 func remove_object(pos_from_tilemap):
