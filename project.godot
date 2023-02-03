@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "PlaceableType",
 "language": "GDScript",
-"path": "res://scripts/SeedType.gd"
+"path": "res://scripts/PlaceableType.gd"
 }, {
 "base": "Node",
 "class": "PlacedObject",

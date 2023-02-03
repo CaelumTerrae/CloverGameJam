@@ -20,21 +20,50 @@ func _ready():
 
 # check whether or not the game has been won.
 func is_level_passed():
-	# need to check the seed store to see if all seeds have successfully grown!
-	pass
+	return curr_growth_level >= required_growth_level
+
+
+func left_click_handler(mouse_tile):
+	if curr_game_state == GameState.PLANTING:
+		place_seed(mouse_tile)
+	elif curr_game_state == GameState.WATERING:
+		print("beginning growth iteration")
+		iterate_growth()
+
+func right_click_handler(mouse_tile):
+	if curr_game_state == GameState.PLANTING:
+		remove_seed(mouse_tile)
+
 
 
 # iterates 1 round of growth
 # returns a bool of whether or not the level can continue or should fail
-# TODO: IMPLEMENT THIS
 func iterate_growth():
-	pass
+	for i in range(len(placed_stack.stack) - 1, -1, -1):
+		# should iterate over all of the placed objects in the stack:
+		var curr_placed_object : PlacedObject = placed_stack.stack[i]
+		var to_place_arr = curr_placed_object.execute_grow()
+	
+		for position in to_place_arr:
+			print("positions attempting to grow into")
+			print(position)
+			if not map_manager.can_grow_into(position):
+				# ATTEMPTING TO PLACE SOMEWHERE WE CANT! GAME FAILURE
+				curr_game_state = GameState.LOST
+				print("duuuuude you lost the game! that sucks a ton dude :/")
+				return false
+			else:
+				map_manager.place_root(position)
+	print("made it through one iteration cycle")
+	curr_growth_level += 1
+	return true
+
+
 
 func run_water_cycle():
 	# shouldn't be able to run this unless the game state is WATERING
 	if curr_game_state != GameState.WATERING:
 		return
-	
 	# keep track of whether or not there was a failure at any point during the level
 	var should_continue = true
 	while not is_level_passed() && should_continue:
@@ -42,26 +71,28 @@ func run_water_cycle():
 	
 	if is_level_passed():
 		curr_game_state = GameState.WON
+		print("you won this level! :D")
 	else:
+		print("you lost this level! D:")
 		curr_game_state = GameState.LOST
 
 func start_watering_cycle():
 	# you should only be able to start the watering cycle if you have placed all of your seeds
 	if seed_store.all_seed_count() > 0:
 		return
-	return
 	
+	print("what about this?")
 	# need to update the state of the game to being watering
 	curr_game_state = GameState.WATERING
+	print(curr_game_state)
 	run_water_cycle()
 
 func place_seed(tile_position):
-	# only allow placement if we are in the PLANTING Game state
-	print(tile_position)
 	if curr_game_state != GameState.PLANTING:
 		return
 	
 	# don't place if not on dirt_map
+	# this should use the abstract representation to see if there is an obstacle there?
 	if not is_placeable_coord(tile_position):
 		return
 	
@@ -75,29 +106,25 @@ func place_seed(tile_position):
 	
 	# let the store know we are using a seed
 	seed_store.use_seed(current_object_in_cursor)
-
 	
 	# use the map manager to place the seed both in abstract
 	# representation, and in tilemap simultaneously
 	var newly_placed_object = map_manager.place_object(tile_position, current_object_in_cursor)
-
 	placed_stack.add_placed_object(newly_placed_object)
-	print("stack from attempted addition:")
-	print(placed_stack.stack)
+	print(placed_stack)
 		
 
 func remove_seed(tile_position):
+	if curr_game_state != GameState.PLANTING:
+		return
 	# when attempting to remove a seed, update the count
-	var current_seed_in_tile_position = seed_store.get_seed_name_from_tile(seed_tilemap.get_cellv(tile_position))
+	var current_seed_in_tile_position = map_manager.remove_object(tile_position)
 
 	if current_seed_in_tile_position != PlaceableType.PlaceableType.EMPTY:
 		seed_store.give_seed(current_seed_in_tile_position)
-	seed_tilemap.set_cellv(tile_position,-1);
 
 	# remove the placement from the stack
 	placed_stack.remove_placed_object_at_tile(tile_position)
-	print("stack from attempted removal")
-	print(placed_stack.stack)
 
 func reset_seed_tilemap():
 	seed_tilemap.clear()

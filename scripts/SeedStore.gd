@@ -4,27 +4,6 @@ class_name SeedStore extends Node
 # Seed Store keeps track of the number of seeds available in a given level
 # as well as the current positions of seeds.
 
-
-var seed_name_to_tile_map = {
-	PlaceableType.PlaceableType.EMPTY: -1,
-	PlaceableType.PlaceableType.SIMPLE:9,
-	PlaceableType.PlaceableType.STARVING:11,
-	PlaceableType.PlaceableType.VINE:12,
-	PlaceableType.PlaceableType.CORROSIVE:13,
-	PlaceableType.PlaceableType.GREEDY:14,
-	PlaceableType.PlaceableType.TUNNELING:15,
-}
-
-var tile_map_to_seed_name = {
-	-1 : PlaceableType.PlaceableType.EMPTY,
-	9  :PlaceableType.PlaceableType.SIMPLE,
-	11 :PlaceableType.PlaceableType.STARVING,
-	12 :PlaceableType.PlaceableType.VINE,
-	13 :PlaceableType.PlaceableType.CORROSIVE,
-	14 :PlaceableType.PlaceableType.GREEDY,
-	15 :PlaceableType.PlaceableType.TUNNELING,
-}
-
 var current_seed_counts = {
 	PlaceableType.PlaceableType.SIMPLE:5,
 	PlaceableType.PlaceableType.STARVING:5,
@@ -47,14 +26,6 @@ func set_starting_seed_counts(seed_counts_dict:={}):
 	for key in seed_counts_dict:
 		current_seed_counts[key] = seed_counts_dict[key]
 	return
-	
-
-# gdscript doesn't support enum typing lol
-func get_tile_from_seed_name(seed_type):
-	return seed_name_to_tile_map[seed_type]
-
-func get_seed_name_from_tile(tile):
-	return tile_map_to_seed_name[tile]
 
 func has_seed(seed_type):
 	return current_seed_counts[seed_type] > 0

@@ -26,7 +26,7 @@ func _unhandled_input(event):
 		# place something onto the tilemap
 		var mouse_tile = get_tileset_position();
 		if event.button_index == BUTTON_LEFT:
-			GameManager.place_seed(mouse_tile)
+			GameManager.left_click_handler(mouse_tile)
 		elif event.button_index == BUTTON_RIGHT:
 			GameManager.remove_seed(mouse_tile)
 			

@@ -6,7 +6,7 @@ class_name PlacedStack extends Node
 
 # It is the definitive interface for dealing with objects on the map that have been placed
 
-var stack = []
+var stack : Array = [] 
 
 func _ready():
 	pass # Replace with function body.

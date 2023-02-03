@@ -34,6 +34,9 @@ var tile_map_to_seed_name = {
 	15 :PlaceableType.PlaceableType.TUNNELING,
 }
 
+# temporarily the thing we will use for the root_tile
+var root_tile_num = 4;
+
 var offset : Vector2;
 var dirt_tilemap : TileMap;
 var obstacle_tilemap : TileMap;
@@ -71,7 +74,7 @@ func generate_representation_array():
 
 	for i in range(0,50):
 		for j in range(0,50):
-			if is_placeable_coord(Vector2(i,j)):
+			if is_placeable_coord_from_tilemap(Vector2(i,j)):
 				min_x = min(i, min_x)
 				max_x = max(i, max_x)
 				min_y = min(j, min_y)
@@ -88,7 +91,7 @@ func generate_representation_array():
 
 	for i in range(len(uninitialized_array)):
 		for j in range(len(uninitialized_array)):
-			uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED if is_placeable_coord(offset + Vector2(i,j)) else TILE_STATES.OCCUPIED_UNCHANGEABLE
+			uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED if is_placeable_coord_from_tilemap(offset + Vector2(i,j)) else TILE_STATES.OCCUPIED_UNCHANGEABLE
 
 	return uninitialized_array
 
@@ -105,7 +108,7 @@ func print_representation_array():
 
 # this is for generating whether or not the tile is placeable
 # position here refers to a position on the TileMap
-func is_placeable_coord(pos: Vector2):
+func is_placeable_coord_from_tilemap(pos: Vector2):
 	# this logic can get more complicated as there are further levels
 	return dirt_tilemap.get_cellv(pos) == 10
 
@@ -117,12 +120,29 @@ func generate_x_by_y_matrix(width: int, height: int):
 			matrix[i].append(TILE_STATES.UNOCCUPIED)
 	return matrix
 
+func get_in_rep_array(pos:Vector2):
+	return representation_array[pos.x][pos.y]
+
 func set_in_rep_array(pos:Vector2, new_val):
+	print(len(representation_array))
+	print(len(representation_array[pos.x]))
 	representation_array[pos.x][pos.y] = new_val
 	print_representation_array()
 
 func tilemap_pos_to_rep_pos(tile_map_pos: Vector2):
 	return tile_map_pos - offset
+
+func rep_pos_to_tilemap_pos(rep_pos: Vector2):
+	return rep_pos + offset
+
+func place_root(rep_pos):
+	# place root on tilemap by placing correct tile in visual representation
+	seed_tilemap.set_cellv(rep_pos_to_tilemap_pos(rep_pos), root_tile_num)
+
+	# place root in rep array
+	set_in_rep_array(rep_pos, TILE_STATES.OCCUPIED_UNCHANGEABLE);
+
+
 
 func place_object(pos_from_tilemap, current_object_in_cursor):
 	# place seed in tilemap by placing correct tile in visual representation
@@ -135,12 +155,25 @@ func place_object(pos_from_tilemap, current_object_in_cursor):
 	# create newly placed object
 	return PlacedObject.new(current_object_in_cursor, representation_position)
 
+# removes object and returns whatever was formerly there
 func remove_object(pos_from_tilemap):
+	# get what is currently there using seed tilemap
+	# eventually we would like to migrate off of using
+	# the tilemap to determine the seed so that
+	# visual representation is completely decoupled from abstract
+	# representation
+	var current_seed_in_tile_position = get_seed_name_from_tile(seed_tilemap.get_cellv(pos_from_tilemap))
+
 	# remove the object from the visual representation
 	seed_tilemap.set_cellv(pos_from_tilemap, -1)
 
+	# set position in rep_array to unoccupied
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	set_in_rep_array(representation_position, TILE_STATES.UNOCCUPIED)
+	print_representation_array()
+
+	# return seed_type that was removed so it can be refunded via seedstore
+	return current_seed_in_tile_position
 
 
 
@@ -149,3 +182,24 @@ func get_tile_from_seed_name(seed_type):
 
 func get_seed_name_from_tile(tile):
 	return tile_map_to_seed_name[tile]
+
+# helper function to determine whether or not a function is in bounds of the
+# representation map
+func in_representation_bounds(pos: Vector2):
+	return pos.x >= 0 && pos.y >=0 && pos.x < len(representation_array) && pos.y < len(representation_array[0])
+
+func can_overwrite_in_rep_array(pos_from_tilemap):
+	# check whether or not the position is even
+	# in the bounds of the representation map 
+	# (interactable area)
+	if not in_representation_bounds(pos_from_tilemap):
+		return false
+	
+	var rep_pos = tilemap_pos_to_rep_pos(pos_from_tilemap)
+	return get_in_rep_array(rep_pos) == TILE_STATES.UNOCCUPIED || get_in_rep_array(rep_pos) == TILE_STATES.OCCUPIED_CHANGEABLE
+
+func can_grow_into(rep_pos):
+	if not in_representation_bounds(rep_pos):
+		return false
+	var state_in_rep_pos = get_in_rep_array(rep_pos)
+	return state_in_rep_pos == TILE_STATES.UNOCCUPIED
