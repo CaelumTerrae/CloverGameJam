@@ -39,5 +39,20 @@ func execute_grow():
 
     return [temp]
 
+func rotate_orientation():
+    match direction_facing:
+        Direction.Direction.NORTH:
+            self.direction_facing = Direction.Direction.EAST
+            next_growth_positions = [position + Vector2(1,0)]
+        Direction.Direction.WEST:
+            self.direction_facing = Direction.Direction.NORTH
+            next_growth_positions = [position + Vector2(0,-1)]
+        Direction.Direction.SOUTH:
+            self.direction_facing = Direction.Direction.WEST
+            next_growth_positions = [position + Vector2(-1,0)]
+        Direction.Direction.EAST:
+            self.direction_facing = Direction.Direction.SOUTH
+            next_growth_positions = [position + Vector2(0,1)]
+
 func is_dead():
     return self.grew_into_obstacle

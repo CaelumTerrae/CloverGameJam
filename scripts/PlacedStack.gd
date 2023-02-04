@@ -17,6 +17,7 @@ func add_placed_object(placed_object : PlacedObject):
 
 # remove the object at a given tile position while preserving the rest of the 
 # placement order
+# returns the type of the placed object
 func remove_placed_object_at_tile(position: Vector2):
 	var index = 0
 	while index < len(stack):
@@ -28,6 +29,17 @@ func remove_placed_object_at_tile(position: Vector2):
 	if index < len(stack):
 		var placed_object : PlacedObject = stack.pop_at(index)
 		return placed_object.get_object_type()
+	return null
+
+# returns reference to an object at a given position in the tile
+# if there is no such object, return null
+func get_placed_object_at_tile(position: Vector2):
+	var index = 0
+	while index < len(stack):
+		var placed_object : PlacedObject = stack[index]
+		if placed_object.get_position() == position:
+			return placed_object
+		index += 1
 	return null
 
 	

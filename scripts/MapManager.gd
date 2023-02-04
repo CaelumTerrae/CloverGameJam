@@ -40,6 +40,7 @@ var offset : Vector2;
 var dirt_tilemap : TileMap;
 var obstacle_tilemap : TileMap;
 var seed_tilemap : TileMap;
+var direction_tilemap: TileMap;
 
 var representation_array : Array;
 
@@ -70,14 +71,16 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 # it should only really have to make updates to the seed_tilemap
 func render_to_display():
 	# clear before re-displaying
-
 	seed_tilemap.clear()
+	direction_tilemap.clear()
+
 	# iterate over the plant stack in order to determine which placed_objects to render on the screen layer
 	var placed_stack = GameManager.placed_stack.stack
 	for placed_object in placed_stack:
 		var tilemap_pos : Vector2 = rep_pos_to_tilemap_pos(placed_object.get_position())
 		var object_type_name = placed_object.get_object_type()
 		seed_tilemap.set_cellv(tilemap_pos, get_tile_from_seed_name(object_type_name))
+		direction_tilemap.set_cellv(tilemap_pos, get_tile_from_direction_enum(placed_object.get_direction()))
 	
 	# iterate over the rep_array to place roots and other thingies:
 	for x in range(len(representation_array)):
@@ -233,3 +236,13 @@ func is_plant_matter(rep_pos):
 	if tile_state == TILE_STATES.PLANT_OCCUPIED || tile_state == TILE_STATES.ROOT_OCCUPIED:
 		return true
 	return false
+
+var direction_to_tile_mapping = {
+	Direction.Direction.NORTH : 27,
+	Direction.Direction.WEST : 26,
+	Direction.Direction.EAST : 25,
+	Direction.Direction.SOUTH : 24,
+}
+
+func get_tile_from_direction_enum(direction):
+	return direction_to_tile_mapping[direction]

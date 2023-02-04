@@ -38,6 +38,14 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 
 [node name="LevelNode" type="Node2D" parent="."]
 z_index = 1
 
+[node name="ForegroundNode" type="Node2D" parent="."]
+z_index = 2
+
+[node name="DirectionalityTileMap" type="TileMap" parent="ForegroundNode"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+format = 1
+
 [node name="SeedTileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )

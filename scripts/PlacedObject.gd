@@ -24,19 +24,22 @@ func _init(seed_type_param, position_param):
 func rotate_orientation():
 	match direction_facing:
 		Direction.Direction.NORTH:
-			direction_facing = Direction.Direction.EAST
+			self.direction_facing = Direction.Direction.EAST
 		Direction.Direction.WEST:
-			direction_facing = Direction.Direction.NORTH
+			self.direction_facing = Direction.Direction.NORTH
 		Direction.Direction.SOUTH:
-			direction_facing = Direction.Direction.WEST
+			self.direction_facing = Direction.Direction.WEST
 		Direction.Direction.EAST:
-			direction_facing = Direction.Direction.SOUTH
+			self.direction_facing = Direction.Direction.SOUTH
 
 func get_position() -> Vector2:
 	return position
 
+func get_direction():
+	return direction_facing
+
 func set_position(new_position):
-	position = new_position
+	self.position = new_position
 
 func is_dead():
 	return false
