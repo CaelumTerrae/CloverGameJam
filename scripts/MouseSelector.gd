@@ -10,7 +10,6 @@ extends Sprite
 func _ready():
 	pass
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var mouse_tile = GameManager.seed_tilemap.world_to_map(get_global_mouse_position() /4);	

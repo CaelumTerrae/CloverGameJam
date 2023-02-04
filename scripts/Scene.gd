@@ -1,5 +1,7 @@
 extends Node2D
 
+onready var TileSet = preload('res://tileset.tres')
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameManager.seed_tilemap = $SeedTileMap;
@@ -61,7 +63,19 @@ func load_level(level_resource_path: String):
 # Signal resolving functions
 func _on_seed_changed(new_seed):
 	GameManager.current_object_in_cursor = new_seed
+	
+	#change cursor to be placeable object sprite
+	var atlas = AtlasTexture.new()
+	var texture = ImageTexture.new()
+	var new_seed_id = MapManager.seed_name_to_tile_map[new_seed]
 
+	texture.create_from_image(TileSet.tile_get_texture(new_seed_id).get_data())
+	atlas.atlas = texture
+	atlas.region = TileSet.tile_get_region(new_seed_id)
+	
+	$MouseSelector.set_texture(atlas)
+	
+	
 func _start_watering_state():
 	GameManager.start_watering_cycle();
 
