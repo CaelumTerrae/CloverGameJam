@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://tileset.tres" type="TileSet" id=1]
+[ext_resource path="res://levels/World1/World1_Level4x.gd" type="Script" id=2]
+
+[node name="World1_Level4x" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="DirtMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+format = 1
+tile_data = PoolIntArray( 65545, 10, 0, 65546, 10, 0, 65547, 10, 0, 65548, 10, 0, 131081, 10, 0, 131082, 10, 0, 131083, 10, 0, 131084, 10, 0, 196617, 10, 0, 196618, 10, 0, 196619, 10, 0, 196620, 10, 0, 262153, 10, 0, 262154, 10, 0, 262155, 10, 0, 262156, 10, 0 )
+
+[node name="ObstacleMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+format = 1
+tile_data = PoolIntArray( 65547, 10, 0, 131082, 9, 0, 196617, 9, 0, 196618, 10, 0 )

@@ -1,7 +1,6 @@
-[gd_resource type="TileSet" load_steps=3 format=2]
+[gd_resource type="TileSet" load_steps=2 format=2]
 
 [ext_resource path="res://assets/OutdoorsTileset.png" type="Texture" id=1]
-[ext_resource path="res://assets/direction.png" type="Texture" id=2]
 
 [resource]
 0/name = "OutdoorsTileset.png 0"
@@ -340,11 +339,11 @@
 23/shape_one_way_margin = 0.0
 23/shapes = [  ]
 23/z_index = 0
-24/name = "direction.png 24"
-24/texture = ExtResource( 2 )
+24/name = "OutdoorsTileset.png 24"
+24/texture = ExtResource( 1 )
 24/tex_offset = Vector2( 0, 0 )
 24/modulate = Color( 1, 1, 1, 1 )
-24/region = Rect2( 0, 0, 16, 16 )
+24/region = Rect2( 16, 112, 16, 16 )
 24/tile_mode = 0
 24/occluder_offset = Vector2( 0, 0 )
 24/navigation_offset = Vector2( 0, 0 )
@@ -354,45 +353,3 @@
 24/shape_one_way_margin = 0.0
 24/shapes = [  ]
 24/z_index = 0
-25/name = "direction.png 25"
-25/texture = ExtResource( 2 )
-25/tex_offset = Vector2( 0, 0 )
-25/modulate = Color( 1, 1, 1, 1 )
-25/region = Rect2( 16, 0, 16, 16 )
-25/tile_mode = 0
-25/occluder_offset = Vector2( 0, 0 )
-25/navigation_offset = Vector2( 0, 0 )
-25/shape_offset = Vector2( 0, 0 )
-25/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-25/shape_one_way = false
-25/shape_one_way_margin = 0.0
-25/shapes = [  ]
-25/z_index = 0
-26/name = "direction.png 26"
-26/texture = ExtResource( 2 )
-26/tex_offset = Vector2( 0, 0 )
-26/modulate = Color( 1, 1, 1, 1 )
-26/region = Rect2( 32, 0, 16, 16 )
-26/tile_mode = 0
-26/occluder_offset = Vector2( 0, 0 )
-26/navigation_offset = Vector2( 0, 0 )
-26/shape_offset = Vector2( 0, 0 )
-26/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-26/shape_one_way = false
-26/shape_one_way_margin = 0.0
-26/shapes = [  ]
-26/z_index = 0
-27/name = "direction.png 27"
-27/texture = ExtResource( 2 )
-27/tex_offset = Vector2( 0, 0 )
-27/modulate = Color( 1, 1, 1, 1 )
-27/region = Rect2( 48, 0, 16, 16 )
-27/tile_mode = 0
-27/occluder_offset = Vector2( 0, 0 )
-27/navigation_offset = Vector2( 0, 0 )
-27/shape_offset = Vector2( 0, 0 )
-27/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-27/shape_one_way = false
-27/shape_one_way_margin = 0.0
-27/shapes = [  ]
-27/z_index = 0
