@@ -66,8 +66,6 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 	representation_array = generate_representation_array()
 	print_representation_array()
 
-<<<<<<< HEAD
-=======
 # this is a very large function that will take all available
 # information across the game state and use it to render out the display!
 # it should only really have to make updates to the seed_tilemap
@@ -94,7 +92,6 @@ func render_to_display():
 	pass
 
 
->>>>>>> main
 
 # this will generate the representation array (uninitialized)
 func generate_representation_array():
