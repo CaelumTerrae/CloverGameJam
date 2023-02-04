@@ -1,5 +1,8 @@
 extends Node2D
 
+onready var MouseSelector = get_node("MouseSelector")
+onready var TileSet = preload('res://tileset.tres')
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameManager.seed_tilemap = $SeedTileMap;
@@ -56,7 +59,10 @@ func load_level(level_resource_path: String):
 # Signal resolving functions
 func _on_seed_changed(new_seed):
 	GameManager.current_object_in_cursor = new_seed
-
+	
+	#change cursor to be placeable object sprite
+	MouseSelector.set_texture(TileSet.tile_get_texture(9))
+	print(TileSet.tile_get_texture(9).get_size())
 func _start_watering_state():
 	GameManager.start_watering_cycle();
 
