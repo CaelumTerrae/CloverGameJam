@@ -24,8 +24,8 @@ func is_dead():
 			if i == 0 && j == 0:
 				break
 			else:
-				print("checking for the starving plant")
-				print(Vector2(i,j))
 				if MapManager.is_plant_matter(position + Vector2(i,j)):
+					print("lost because of starving plant")
+					print(Vector2(i,j))
 					return true
 	return false

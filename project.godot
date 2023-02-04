@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "PlacedObject",
-"class": "CorrosivePlantObject",
-"language": "GDScript",
-"path": "res://scripts/plants/CorrosivePlantObject.gd"
-}, {
 "base": "Node",
 "class": "Direction",
 "language": "GDScript",
@@ -55,7 +50,6 @@ _global_script_classes=[ {
 "path": "res://scripts/plants/StarvingPlantObject.gd"
 } ]
 _global_script_class_icons={
-"CorrosivePlantObject": "",
 "Direction": "",
 "LevelObject": "",
 "PlaceableType": "",
