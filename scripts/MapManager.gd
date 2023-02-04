@@ -65,6 +65,7 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 	dirt_tilemap = dirt_tm
 	obstacle_tilemap = obstacle_tm
 	seed_tilemap = seed_tm
+	direction_tilemap.clear()
 	representation_array = generate_representation_array()
 	# load in obstacles to the representation array using the obstacle tilemap.
 	print_representation_array()
