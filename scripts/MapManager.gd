@@ -42,6 +42,8 @@ var obstacle_tilemap : TileMap;
 var seed_tilemap : TileMap;
 var direction_tilemap: TileMap;
 
+# have some TILE_STATEs that you can use to distinguish which you can
+# delete w/ corrosive vs. which are permanent obstacles
 var representation_array : Array;
 
 enum TILE_STATES {
@@ -64,6 +66,7 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 	obstacle_tilemap = obstacle_tm
 	seed_tilemap = seed_tm
 	representation_array = generate_representation_array()
+	# load in obstacles to the representation array using the obstacle tilemap.
 	print_representation_array()
 
 # this is a very large function that will take all available
@@ -241,7 +244,7 @@ var direction_to_tile_mapping = {
 	Direction.Direction.NORTH : 27,
 	Direction.Direction.WEST : 26,
 	Direction.Direction.EAST : 25,
-	Direction.Direction.SOUTH : 24,
+	Direction.Direction.SOUTH : 28,
 }
 
 func get_tile_from_direction_enum(direction):
