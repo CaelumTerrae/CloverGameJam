@@ -38,6 +38,9 @@ func set_starting_seed_counts(seed_counts_dict:={}):
 		current_seed_counts[key] = seed_counts_dict[key]
 	return
 
+func get_count(seed_type):
+	return current_seed_counts[seed_type]
+
 func has_seed(seed_type):
 	return current_seed_counts[seed_type] > 0
 	

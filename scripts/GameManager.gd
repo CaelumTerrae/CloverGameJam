@@ -1,6 +1,7 @@
 extends Node
 signal game_won()
 signal game_lost()
+signal seed_store_update()
 
 # DESCRIPTION:
 # THIS IS A SINGLETON CLASS. IT CAN BE ACCESSED ANYWHERE IN THE SCRIPT
@@ -147,6 +148,7 @@ func place_seed(tile_position):
 	
 	# let the store know we are using a seed
 	seed_store.use_seed(current_object_in_cursor)
+	emit_signal("seed_store_update")
 	
 	# use the map manager to place the seed both in abstract
 	# representation, and in tilemap simultaneously
@@ -172,6 +174,7 @@ func remove_seed(tile_position):
 	# update the count in the seed store
 	if current_object_type_in_tile_position != null:
 		seed_store.give_seed(current_object_type_in_tile_position)
+		emit_signal("seed_store_update")
 
 func reset_seed_tilemap():
 	seed_tilemap.clear()
@@ -190,6 +193,7 @@ func load_level(level_node: LevelObject):
 	
 	# next the SeedStore should be set to the SeedStore of the level
 	seed_store = level_node.get_seed_store()
+	emit_signal('seed_store_update')
 
 	# re-initialize the placedstack so we have a new one
 	placed_stack = PlacedStack.new()
@@ -213,6 +217,7 @@ func construct_placed_object_from_seed_type(seed_type, representation_position):
 
 func reset_level():
 	seed_store.reset_store()
+	emit_signal("seed_store_update")
 	placed_stack.reset_stack()
 	MapManager.reset_map()
 	curr_game_state = GameState.PLANTING
