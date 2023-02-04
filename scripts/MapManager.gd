@@ -50,8 +50,10 @@ enum TILE_STATES {
 	UNOCCUPIED, # free spaces
 	PLANT_OCCUPIED, # occupied by a plant
 	ROOT_OCCUPIED, # occupied by a root grown by a plant
-	PLACED_ROCK, # occupied by a rock
-	OCCUPIED_UNCHANGEABLE, # spaces that are occupied but cannot be overwritten
+	ROCK, # occupied by a rock
+	PREPLACED_ROCK, # space occupied by a rock that was pre-placed in level
+	PUDDLE, # space occupied by a puddle
+	UNPLACEABLE_BORDER, # spaces that are occupied but cannot be overwritten
 }
 
 # Called when the node enters the scene tree for the first time.
@@ -64,6 +66,8 @@ func _init():
 func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 	if dirt_tilemap != null:
 		dirt_tilemap.clear()
+	if obstacle_tilemap != null:
+		obstacle_tilemap.clear()
 	clear_representation_array()
 	dirt_tilemap = dirt_tm
 	obstacle_tilemap = obstacle_tm
@@ -110,7 +114,7 @@ func generate_representation_array():
 
 	for i in range(0,50):
 		for j in range(0,50):
-			if is_placeable_coord_from_tilemap(Vector2(i,j)):
+			if is_placeable_coord_from_dirt_tilemap(Vector2(i,j)):
 				min_x = min(i, min_x)
 				max_x = max(i, max_x)
 				min_y = min(j, min_y)
@@ -125,12 +129,26 @@ func generate_representation_array():
 	
 	var uninitialized_array = generate_x_by_y_matrix(max_x - min_x + 1, max_y - min_y + 1)
 	
-	print_array_to_std_out(uninitialized_array)
+	
 
 	for i in range(len(uninitialized_array)):
 		for j in range(len(uninitialized_array[0])):
-			uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED if is_placeable_coord_from_tilemap(offset + Vector2(i,j)) else TILE_STATES.OCCUPIED_UNCHANGEABLE
+			var rep_pos = Vector2(i,j)
+			var tilemap_pos = rep_pos_to_tilemap_pos(rep_pos)
+			if is_placeable_coord_from_dirt_tilemap(tilemap_pos):
+				uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED
+			
+			print("checking if is_rock_coord_from_obstacle_tilemap:")
+			print(obstacle_tilemap.get_cellv(tilemap_pos))
+			if is_rock_coord_from_obstacle_tilemap(tilemap_pos):
+				uninitialized_array[i][j] = TILE_STATES.PREPLACED_ROCK
+			
+			if is_puddle_coord_from_obstacle_tilemap(tilemap_pos):
+				uninitialized_array[i][j] = TILE_STATES.PUDDLE
 
+			# uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED if is_placeable_coord_from_dirt_tilemap(offset + rep_pos) else TILE_STATES.UNPLACEABLE_BORDER
+	
+	print_array_to_std_out(uninitialized_array)
 	return uninitialized_array
 
 func print_representation_array():
@@ -149,9 +167,15 @@ func print_array_to_std_out(array):
 
 # this is for generating whether or not the tile is placeable
 # position here refers to a position on the TileMap
-func is_placeable_coord_from_tilemap(pos: Vector2):
+func is_placeable_coord_from_dirt_tilemap(tilemap_pos: Vector2):
 	# this logic can get more complicated as there are further levels
-	return dirt_tilemap.get_cellv(pos) == 10
+	return dirt_tilemap.get_cellv(tilemap_pos) == 10
+
+func is_rock_coord_from_obstacle_tilemap(tilemap_pos: Vector2):
+	return obstacle_tilemap.get_cellv(tilemap_pos) == 9
+
+func is_puddle_coord_from_obstacle_tilemap(tilemap_pos: Vector2):
+	return obstacle_tilemap.get_cellv(tilemap_pos) == 24
 
 func generate_x_by_y_matrix(width: int, height: int):
 	var matrix = []
@@ -188,7 +212,7 @@ func place_object(pos_from_tilemap, current_object_in_cursor):
 	if object_is_plant(current_object_in_cursor):
 		set_in_rep_array(representation_position, TILE_STATES.PLANT_OCCUPIED)
 	else:
-		set_in_rep_array(representation_position, TILE_STATES.PLACED_ROCK)
+		set_in_rep_array(representation_position, TILE_STATES.ROCK)
 	render_to_display()
 
 
@@ -228,7 +252,7 @@ func can_overwrite_in_rep_array(pos_from_tilemap):
 	if not in_representation_bounds(rep_pos):
 		return false
 	var tile_state = get_in_rep_array(rep_pos)
-	return tile_state == TILE_STATES.UNOCCUPIED || tile_state == TILE_STATES.PLACED_ROCK || tile_state == TILE_STATES.PLANT_OCCUPIED
+	return tile_state == TILE_STATES.UNOCCUPIED || tile_state == TILE_STATES.ROCK || tile_state == TILE_STATES.PLANT_OCCUPIED
 
 func can_grow_into(rep_pos):
 	if not in_representation_bounds(rep_pos):
@@ -255,6 +279,7 @@ var direction_to_tile_mapping = {
 func get_tile_from_direction_enum(direction):
 	return direction_to_tile_mapping[direction]
 
+# this completely clears the representation_array
 func clear_representation_array():
 	for i in range(len(representation_array)):
 		for j in range(len(representation_array[0])):
@@ -262,15 +287,19 @@ func clear_representation_array():
 			var curr_tile = get_in_rep_array(rep_pos)
 			match curr_tile:
 				TILE_STATES.UNOCCUPIED:
-					# do nothing
 					continue
 				TILE_STATES.PLANT_OCCUPIED:
 					# update the plant space to be unoccupied
 					set_in_rep_array(rep_pos, TILE_STATES.UNOCCUPIED)
 				TILE_STATES.ROOT_OCCUPIED:
 					set_in_rep_array(rep_pos, TILE_STATES.UNOCCUPIED)
-				TILE_STATES.PLACED_ROCK:
-					set_in_rep_array(rep_pos, TILE_STATES.CHANGEABLE)
+				TILE_STATES.ROCK:
+					set_in_rep_array(rep_pos, TILE_STATES.UNOCCUPIED)
+				TILE_STATES.PREPLACED_ROCK:
+					continue
+				TILE_STATES.PUDDLE:
+					continue
+				
 	render_to_display()
 
 

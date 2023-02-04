@@ -135,7 +135,7 @@ func place_seed(tile_position):
 	
 	# don't place if not on dirt_map
 	# this should use the abstract representation to see if there is an obstacle there?
-	if not is_placeable_coord(tile_position):
+	if not MapManager.can_overwrite_in_rep_array(tile_position):
 		return
 	
 	# don't place operation if we don't have seed
