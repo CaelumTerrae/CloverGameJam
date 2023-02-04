@@ -258,7 +258,7 @@ func can_grow_into(rep_pos):
 	if not in_representation_bounds(rep_pos):
 		return false
 	var state_in_rep_pos = get_in_rep_array(rep_pos)
-	return state_in_rep_pos == TILE_STATES.UNOCCUPIED
+	return state_in_rep_pos == TILE_STATES.UNOCCUPIED || state_in_rep_pos == TILE_STATES.PUDDLE
 
 func is_plant_matter(rep_pos):
 	if not in_representation_bounds(rep_pos):
