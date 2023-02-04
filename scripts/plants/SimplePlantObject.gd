@@ -1,5 +1,7 @@
 class_name SimplePlantObject extends PlacedObject
 
+var grew_into_obstacle = false
+
 func _ready():
     pass
 
@@ -31,4 +33,11 @@ func execute_grow():
             next_growth_positions = [temp + Vector2(1,0)]
         Direction.Direction.WEST:
             next_growth_positions = [temp + Vector2(-1,0)]
+    
+    if not MapManager.can_grow_into(temp):
+        self.grew_into_obstacle = true
+
     return [temp]
+
+func is_dead():
+    return self.grew_into_obstacle

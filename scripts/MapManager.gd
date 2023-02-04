@@ -45,6 +45,8 @@ var representation_array : Array;
 
 enum TILE_STATES {
 	UNOCCUPIED, # free spaces
+	PLANT_OCCUPIED, # occupied by a plant
+	ROOT_OCCUPIED, # occupied by a root grown by a plant
 	OCCUPIED_CHANGEABLE, # spaces that are occupied but can be overwritten
 	OCCUPIED_UNCHANGEABLE, # spaces that are occupied but cannot be overwritten
 }
@@ -87,22 +89,27 @@ func generate_representation_array():
 		return [[]]
 	
 	var uninitialized_array = generate_x_by_y_matrix(max_x - min_x + 1, max_y - min_y + 1)
+	
+	print_array_to_std_out(uninitialized_array)
 
 	for i in range(len(uninitialized_array)):
-		for j in range(len(uninitialized_array)):
+		for j in range(len(uninitialized_array[0])):
 			uninitialized_array[i][j] = TILE_STATES.UNOCCUPIED if is_placeable_coord_from_tilemap(offset + Vector2(i,j)) else TILE_STATES.OCCUPIED_UNCHANGEABLE
 
 	return uninitialized_array
 
 func print_representation_array():
+	print_array_to_std_out(representation_array)
+		
+func print_array_to_std_out(array):
 	# the native way of printing a 2d array will print it with first
 	# coord being the y and the second coord being the x
 	# so to make this easier, I'm gonna flip the printing!
-	if len(representation_array) > 0 && len(representation_array[0]) > 0:
-		for y in range(len(representation_array[0])):
+	if len(array) > 0 && len(array[0]) > 0:
+		for y in range(len(array[0])):
 			var temp_str = '';
-			for x in range(len(representation_array)):
-				temp_str += String(representation_array[x][y])
+			for x in range(len(array)):
+				temp_str += String(array[x][y])
 			print(temp_str)
 
 # this is for generating whether or not the tile is placeable
@@ -139,8 +146,7 @@ func place_root(rep_pos):
 	seed_tilemap.set_cellv(rep_pos_to_tilemap_pos(rep_pos), root_tile_num)
 
 	# place root in rep array
-	set_in_rep_array(rep_pos, TILE_STATES.OCCUPIED_UNCHANGEABLE);
-
+	set_in_rep_array(rep_pos, TILE_STATES.ROOT_OCCUPIED);
 
 
 func place_object(pos_from_tilemap, current_object_in_cursor):
@@ -149,10 +155,25 @@ func place_object(pos_from_tilemap, current_object_in_cursor):
 
 	# place seed in representation array
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
-	set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
+	if object_is_plant(current_object_in_cursor):
+		set_in_rep_array(representation_position, TILE_STATES.PLANT_OCCUPIED)
+	else:
+		set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
 
 	# create newly placed object with reference to the current map manager
 	return GameManager.construct_placed_object_from_seed_type(current_object_in_cursor, representation_position)
+
+
+func object_is_plant(placeable_object_type):
+	match placeable_object_type:
+		PlaceableType.PlaceableType.EMPTY:
+			return false
+		PlaceableType.PlaceableType.ROCK:
+			return false
+		_:
+			return true
+
+
 
 # removes object and returns whatever was formerly there
 func remove_object(pos_from_tilemap):
@@ -182,8 +203,9 @@ func get_tile_from_seed_name(seed_type):
 func get_seed_name_from_tile(tile):
 	return tile_map_to_seed_name[tile]
 
-# helper function to determine whether or not a function is in bounds of the
+# helper function to determine whether or not a position is in bounds of the
 # representation map
+# this should take a representation_position
 func in_representation_bounds(pos: Vector2):
 	return pos.x >= 0 && pos.y >=0 && pos.x < len(representation_array) && pos.y < len(representation_array[0])
 
@@ -191,14 +213,23 @@ func can_overwrite_in_rep_array(pos_from_tilemap):
 	# check whether or not the position is even
 	# in the bounds of the representation map 
 	# (interactable area)
-	if not in_representation_bounds(pos_from_tilemap):
-		return false
-	
 	var rep_pos = tilemap_pos_to_rep_pos(pos_from_tilemap)
-	return get_in_rep_array(rep_pos) == TILE_STATES.UNOCCUPIED || get_in_rep_array(rep_pos) == TILE_STATES.OCCUPIED_CHANGEABLE
+	if not in_representation_bounds(rep_pos):
+		return false
+	var tile_state = get_in_rep_array(rep_pos)
+	return tile_state == TILE_STATES.UNOCCUPIED || tile_state == TILE_STATES.OCCUPIED_CHANGEABLE || tile_state == TILE_STATES.PLANT_OCCUPIED
 
 func can_grow_into(rep_pos):
 	if not in_representation_bounds(rep_pos):
 		return false
 	var state_in_rep_pos = get_in_rep_array(rep_pos)
 	return state_in_rep_pos == TILE_STATES.UNOCCUPIED
+
+func is_plant_matter(rep_pos):
+	if not in_representation_bounds(rep_pos):
+		return false
+	
+	var tile_state = get_in_rep_array(rep_pos)
+	if tile_state == TILE_STATES.PLANT_OCCUPIED || tile_state == TILE_STATES.ROOT_OCCUPIED:
+		return true
+	return false

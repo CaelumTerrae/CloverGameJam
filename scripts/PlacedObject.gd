@@ -36,6 +36,9 @@ func get_position() -> Vector2:
 func set_position(new_position):
 	position = new_position
 
+func is_dead():
+	return false
+
 # should determine the first next_growth_positions of the plant
 func initialize():
 	# this is intentionally a stub and should be overwritten by the specific plant object

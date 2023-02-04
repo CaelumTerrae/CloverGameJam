@@ -6,7 +6,7 @@ func _ready():
 	# this has seed store because it inherits LevelObject
 	self.seed_store.set_starting_seed_counts({
 	PlaceableType.PlaceableType.SIMPLE:1,
-	PlaceableType.PlaceableType.STARVING:0,
+	PlaceableType.PlaceableType.STARVING:1,
 	PlaceableType.PlaceableType.VINE:0,
 	PlaceableType.PlaceableType.CORROSIVE:0,
 	PlaceableType.PlaceableType.GREEDY:0,

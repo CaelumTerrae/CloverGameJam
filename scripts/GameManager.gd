@@ -35,35 +35,40 @@ func left_click_handler(mouse_tile):
 		place_seed(mouse_tile)
 	elif curr_game_state == GameState.WATERING:
 		print("beginning growth iteration")
-		iterate_growth()
 
 func right_click_handler(mouse_tile):
 	if curr_game_state == GameState.PLANTING:
 		remove_seed(mouse_tile)
 
-
+# iterates over plants to see if any have died
+func any_plants_dead():
+	for plant in placed_stack.stack:
+		if plant.is_dead():
+			return true
+	return false
 
 # iterates 1 round of growth
 # returns a bool of whether or not the level can continue or should fail
-func iterate_growth():
+func iterate_growth() -> bool:
 	for i in range(len(placed_stack.stack) - 1, -1, -1):
 		# should iterate over all of the placed objects in the stack:
 		var curr_placed_object : PlacedObject = placed_stack.stack[i]
-		# this is a list of positions that the curr_placed object wants to
-		# grow into
+		
+		# get the places that the object would like to grow into
 		var to_place_arr = curr_placed_object.execute_grow()
+
+		# determine if the growth stage kills any plants
+		if any_plants_dead():
+			curr_game_state = GameState.LOST
+			print("duuuuude you lost the game! that sucks a ton!")
+			return false
+		
+		# if growth stage doesn't kill any plants
 		for position in to_place_arr:
-			if not MapManager.can_grow_into(position):
-				# ATTEMPTING TO PLACE SOMEWHERE WE CANT! GAME FAILURE
-				curr_game_state = GameState.LOST
-				print("duuuuude you lost the game! that sucks a ton!")
-				return false
-			else:
 				MapManager.place_root(position)
 	print("made it through one iteration cycle")
 	curr_growth_level += 1
 	return true
-
 
 
 func run_water_cycle():
@@ -160,5 +165,7 @@ func construct_placed_object_from_seed_type(seed_type, representation_position):
 	match seed_type:
 		PlaceableType.PlaceableType.SIMPLE:
 			return SimplePlantObject.new(representation_position)
+		PlaceableType.PlaceableType.STARVING:
+			return StarvingPlantObject.new(representation_position)
 	
 	return PlacedObject.new(seed_type, representation_position)
