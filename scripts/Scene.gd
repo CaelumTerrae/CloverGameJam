@@ -1,19 +1,44 @@
 extends Node2D
 
+var level_paths = [
+	"res://levels/World1/World1_Level1.tscn",
+	"res://levels/World1/World1_Level2.tscn",
+	"res://levels/World1/World1_Level3.tscn",
+	"res://levels/World1/World1_Level3x.tscn",
+	"res://levels/World1/World1_Level4.tscn",
+	"res://levels/World1/World1_Level4x.tscn",
+	"res://levels/World1/World1_Level5.tscn",
+	"res://levels/World1/World1_Level5x.tscn",
+	"res://levels/World1/World1_Level6.tscn",
+	"res://levels/World1/World2_Level1.tscn",
+	"res://levels/World1/World2_Level2.tscn",
+	"res://levels/World1/World2_Level3.tscn",
+	"res://levels/World1/World2_Level4.tscn",
+	"res://levels/World1/World2_Level5.tscn",
+	"res://levels/World1/World2_Level5x.tscn",
+	"res://levels/World1/World2_Level6.tscn",
+	"res://levels/World1/World2_Level6x.tscn",
+	"res://levels/World1/World3_Level1.tscn",
+	"res://levels/World1/World3_Level1x.tscn",
+	"res://levels/World1/World3_Level2.tscn",
+	"res://levels/World1/World3_Level3.tscn",
+	"res://levels/World1/World3_Level4.tscn",
+];
+# 0 indexed level
+var cur_level : int
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameManager.seed_tilemap = $SeedTileMap;
 	MapManager.direction_tilemap = $ForegroundNode/DirectionalityTileMap;
 	$GUINode/Control.connect("seed_changed", self, "_on_seed_changed")
 	$GUINode/Control.connect("start_watering_state", self, "_start_watering_state")
-	GameManager.connect("game_won", self, "_handle_won_game")
+	GameManager.connect("level_complete", self, "_handle_level_complete")
 	
 	# initially load level 1 into the scene by adding it as a child of LevelNode
-	load_level("res://levels/World1/World1_Level1.tscn")
-	pass
-
-func _handle_won_game():
-	print("got a won game state event")
+	cur_level = 0
+	load_level(level_paths[cur_level])
 	pass
 
 # returns the scaled global position of the mouse.
@@ -60,5 +85,7 @@ func _on_seed_changed(new_seed):
 func _start_watering_state():
 	GameManager.start_watering_cycle();
 
-
-	
+func _handle_level_complete():
+	cur_level += 1
+	load_level(level_paths[cur_level])
+	pass

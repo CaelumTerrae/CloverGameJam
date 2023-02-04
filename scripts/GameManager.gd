@@ -1,5 +1,5 @@
 extends Node
-signal game_won()
+signal level_complete()
 
 # DESCRIPTION:
 # THIS IS A SINGLETON CLASS. IT CAN BE ACCESSED ANYWHERE IN THE SCRIPT
@@ -96,7 +96,7 @@ func run_water_cycle():
 	if is_level_passed():
 		curr_game_state = GameState.WON
 		# load next level
-		emit_signal("game_won")
+		emit_signal("level_complete")
 		print("you won this level! :D")
 	else:
 		print("you lost this level! D:")
