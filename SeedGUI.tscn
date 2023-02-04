@@ -1,10 +1,15 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/CloverButton.png" type="Texture" id=1]
+[ext_resource path="res://assets/CloverButtonPressed.png" type="Texture" id=2]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_scale = Vector2( 0.25, 0.25 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 256, 0 )
@@ -80,3 +85,99 @@ margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Start"
+
+[node name="PaletteVBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 25.0
+margin_right = -960.0
+margin_bottom = -50.0
+rect_min_size = Vector2( 64, 550 )
+
+[node name="SimpleButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_right = 64.0
+margin_bottom = 65.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="StarvingButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 69.0
+margin_right = 64.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="VineButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 138.0
+margin_right = 64.0
+margin_bottom = 203.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="CorrosiveButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 207.0
+margin_right = 64.0
+margin_bottom = 273.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="GreedyButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 277.0
+margin_right = 64.0
+margin_bottom = 342.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="TunnelingButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 346.0
+margin_right = 64.0
+margin_bottom = 411.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="RockButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 415.0
+margin_right = 64.0
+margin_bottom = 480.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="EraserButton" type="TextureButton" parent="PaletteVBoxContainer"]
+margin_top = 484.0
+margin_right = 64.0
+margin_bottom = 550.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+expand = true
+stretch_mode = 3

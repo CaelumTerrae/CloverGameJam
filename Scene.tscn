@@ -13,12 +13,9 @@ scale = Vector2( 4, 4 )
 script = ExtResource( 4 )
 
 [node name="GUINode" type="Node2D" parent="."]
-position = Vector2( 0, 114 )
 z_index = 1
 
 [node name="Control" parent="GUINode" instance=ExtResource( 5 )]
-margin_top = -10.25
-margin_bottom = -10.25
 script = ExtResource( 6 )
 
 [node name="BackgroundNode" type="Node2D" parent="."]
