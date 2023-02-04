@@ -33,7 +33,10 @@ func is_level_passed():
 
 func left_click_handler(mouse_tile):
 	if curr_game_state == GameState.PLANTING:
-		place_seed(mouse_tile)
+		if current_object_in_cursor == PlaceableType.PlaceableType.EMPTY:
+			remove_seed(mouse_tile)
+		else:
+			place_seed(mouse_tile)
 	elif curr_game_state == GameState.WATERING:
 		print("beginning growth iteration")
 
