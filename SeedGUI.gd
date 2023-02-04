@@ -14,8 +14,7 @@ func _ready():
 	$PaletteVBoxContainer/RockButton.connect("pressed", self, "_pressed_rock_button")
 	$PaletteVBoxContainer/EraserButton.connect("pressed", self, "_pressed_eraser_button")
 	
-	# right now there is no watering button, but I will make it l8r
-	$VBoxContainer/SecondRowContainer/StartWateringButton.connect("pressed",self, "_press_start_watering_button");
+	$MarginContainer/TextureButton.connect("pressed", self, "_press_start_watering_button")
 
 func _pressed_simple_button():
 	emit_signal("seed_changed", PlaceableType.PlaceableType.SIMPLE);
