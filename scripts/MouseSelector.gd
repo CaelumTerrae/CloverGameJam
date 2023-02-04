@@ -17,4 +17,3 @@ func _process(delta):
 	var local_pos = GameManager.seed_tilemap.map_to_world(mouse_tile);
 	var world_pos = GameManager.seed_tilemap.to_global(local_pos);
 	global_position = world_pos
-

@@ -15,6 +15,9 @@ func _ready():
 	$PaletteVBoxContainer/EraserButton.connect("pressed", self, "_pressed_eraser_button")
 	
 	$MarginContainer/TextureButton.connect("pressed", self, "_press_start_watering_button")
+	$LostModalContainer/Control/MarginContainer/PlayAgainButton.connect("pressed", self, "_play_again")
+	
+	GameManager.connect("game_lost", self, "_show_lost_modal")
 
 func _pressed_simple_button():
 	emit_signal("seed_changed", PlaceableType.PlaceableType.SIMPLE);
@@ -43,3 +46,12 @@ func _pressed_eraser_button():
 	
 func _press_start_watering_button():
 	emit_signal("start_watering_state");
+
+func _show_lost_modal():
+	$LostModalContainer.set_visible(true)
+
+func _play_again():
+	print("clicked the play_again button")
+	# set the visibility to none
+	$LostModalContainer.set_visible(false)
+	GameManager.reset_level()

@@ -37,8 +37,14 @@ func _ready():
 	GameManager.connect("level_complete", self, "_handle_level_complete")
 	
 	# initially load level 1 into the scene by adding it as a child of LevelNode
-	cur_level = 0
-	load_level(level_paths[cur_level])
+	load_level("res://levels/World1/World1_Level1.tscn")
+	pass
+
+func _handle_won_game():
+	# find the next level
+	var next_level_resource_path = LevelOrder.next_level()
+	load_level(next_level_resource_path)
+	print(GameManager.seed_store.current_seed_counts)
 	pass
 
 # returns the scaled global position of the mouse.
@@ -68,9 +74,11 @@ func load_level(level_resource_path: String):
 	# if there is currently a level loaded, unload it from the node.
 	if ($LevelNode.get_child_count() != 0):
 		for n in $LevelNode.get_children():
+			print("removed level currently in LevelNode")
 			$LevelNode.remove_child(n)
 			n.queue_free()
 	# load the next level in
+	print("placing new child in level node")
 	var level_node = level_scene.instance()
 	add_child_below_node($LevelNode, level_node)
 	

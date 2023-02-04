@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/CloverButton.png" type="Texture" id=1]
 [ext_resource path="res://assets/CloverButtonPressed.png" type="Texture" id=2]
+[ext_resource path="res://assets/ModalBackground.png" type="Texture" id=3]
+[ext_resource path="res://assets/PixulBrush-Mono.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 23
+font_data = ExtResource( 4 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -126,3 +132,61 @@ expand = true
 visible = false
 margin_right = 844.0
 margin_bottom = 76.0
+
+[node name="LostModalContainer" type="MarginContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 152.0
+margin_top = 60.0
+margin_right = -96.0
+margin_bottom = -156.0
+
+[node name="TextureRect" type="TextureRect" parent="LostModalContainer"]
+margin_right = 776.0
+margin_bottom = 384.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+
+[node name="Control2" type="Control" parent="LostModalContainer"]
+margin_right = 776.0
+margin_bottom = 384.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="LostModalContainer/Control2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 108.0
+margin_top = 56.0
+margin_right = -112.0
+margin_bottom = -164.0
+
+[node name="Label" type="Label" parent="LostModalContainer/Control2/MarginContainer2"]
+margin_top = 1.0
+margin_right = 556.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "You lost the level! 
+Would you like to try again?"
+autowrap = true
+
+[node name="Control" type="Control" parent="LostModalContainer"]
+margin_right = 776.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 776, 384 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LostModalContainer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 116.0
+margin_top = 268.0
+margin_right = -116.0
+margin_bottom = -24.0
+
+[node name="PlayAgainButton" type="Button" parent="LostModalContainer/Control/MarginContainer"]
+margin_right = 544.0
+margin_bottom = 92.0
+text = "Play again?"

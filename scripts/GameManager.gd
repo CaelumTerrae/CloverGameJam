@@ -1,5 +1,6 @@
 extends Node
-signal level_complete()
+signal game_won()
+signal game_lost()
 
 # DESCRIPTION:
 # THIS IS A SINGLETON CLASS. IT CAN BE ACCESSED ANYWHERE IN THE SCRIPT
@@ -15,6 +16,7 @@ onready var seed_store = SeedStore.new()
 onready var placed_stack = PlacedStack.new()
 onready var current_object_in_cursor = PlaceableType.PlaceableType.SIMPLE
 onready var curr_game_state = GameState.PLANTING
+var curr_level_resource : String
 var curr_growth_level = 0
 var seed_tilemap : TileMap
 var dirt_tilemap : TileMap
@@ -101,6 +103,7 @@ func run_water_cycle():
 	else:
 		print("you lost this level! D:")
 		curr_game_state = GameState.LOST
+		emit_signal("game_lost")
 
 func start_watering_cycle():
 	# you should only be able to start the watering cycle if you have placed all of your seeds
@@ -174,7 +177,7 @@ func reset_seed_tilemap():
 	seed_tilemap.clear()
 
 func load_level(level_node: LevelObject):
-	# when a level is loaded the seed_tilemap should be reset
+	# when a level is loaded the seed_tilemap should be resets
 	reset_seed_tilemap()
 
 	# reset the curr_growth level
@@ -188,8 +191,12 @@ func load_level(level_node: LevelObject):
 	# next the SeedStore should be set to the SeedStore of the level
 	seed_store = level_node.get_seed_store()
 
+	# re-initialize the placedstack so we have a new one
+	placed_stack = PlacedStack.new()
+
 	# pass the tilemaps to the map manager
 	MapManager.load_level(dirt_tilemap, obstacle_tilemap, seed_tilemap)
+	curr_game_state = GameState.PLANTING
 
 func is_placeable_coord(pos: Vector2):
 	# we can update the params here if we want to make this more complicated
@@ -203,3 +210,13 @@ func construct_placed_object_from_seed_type(seed_type, representation_position):
 			return StarvingPlantObject.new(representation_position)
 	
 	return PlacedObject.new(seed_type, representation_position)
+
+func reset_level():
+	seed_store.reset_store()
+	placed_stack.reset_stack()
+	MapManager.reset_map()
+	curr_game_state = GameState.PLANTING
+	pass
+
+func next_level():
+	emit_signal('game_won')

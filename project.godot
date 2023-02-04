@@ -76,6 +76,7 @@ config/icon="res://assets/icon.png"
 
 GameManager="*res://scripts/GameManager.gd"
 MapManager="*res://scripts/MapManager.gd"
+LevelOrder="*res://scripts/LevelOrder.gd"
 
 [display]
 

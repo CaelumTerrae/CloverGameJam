@@ -42,4 +42,7 @@ func get_placed_object_at_tile(position: Vector2):
 		index += 1
 	return null
 
+func reset_stack():
+	stack = []
+
 	
