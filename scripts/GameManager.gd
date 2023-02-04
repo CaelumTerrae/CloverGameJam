@@ -177,7 +177,7 @@ func reset_seed_tilemap():
 	seed_tilemap.clear()
 
 func load_level(level_node: LevelObject):
-	# when a level is loaded the seed_tilemap should be reset
+	# when a level is loaded the seed_tilemap should be resets
 	reset_seed_tilemap()
 
 	# reset the curr_growth level
@@ -191,8 +191,12 @@ func load_level(level_node: LevelObject):
 	# next the SeedStore should be set to the SeedStore of the level
 	seed_store = level_node.get_seed_store()
 
+	# re-initialize the placedstack so we have a new one
+	placed_stack = PlacedStack.new()
+
 	# pass the tilemaps to the map manager
 	MapManager.load_level(dirt_tilemap, obstacle_tilemap, seed_tilemap)
+	curr_game_state = GameState.PLANTING
 
 func is_placeable_coord(pos: Vector2):
 	# we can update the params here if we want to make this more complicated
@@ -213,3 +217,6 @@ func reset_level():
 	MapManager.reset_map()
 	curr_game_state = GameState.PLANTING
 	pass
+
+func next_level():
+	emit_signal('game_won')

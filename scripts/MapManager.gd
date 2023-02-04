@@ -62,6 +62,9 @@ func _init():
 	return
 
 func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
+	if dirt_tilemap != null:
+		dirt_tilemap.clear()
+	clear_representation_array()
 	dirt_tilemap = dirt_tm
 	obstacle_tilemap = obstacle_tm
 	seed_tilemap = seed_tm
@@ -74,8 +77,10 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 # it should only really have to make updates to the seed_tilemap
 func render_to_display():
 	# clear before re-displaying
-	seed_tilemap.clear()
-	direction_tilemap.clear()
+	if seed_tilemap != null:
+		seed_tilemap.clear()
+	if direction_tilemap != null:
+		direction_tilemap.clear()
 
 	# iterate over the plant stack in order to determine which placed_objects to render on the screen layer
 	var placed_stack = GameManager.placed_stack.stack
@@ -272,5 +277,4 @@ func clear_representation_array():
 func reset_map():
 	# return the state to the level when it is initially loaded!
 	clear_representation_array()
-	print_representation_array()
 	pass

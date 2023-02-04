@@ -12,7 +12,7 @@ var direction_facing = Direction.Direction.EAST
 var next_growth_positions = []
 
 
-# Called when the node enters the scene tree forsthe first time.
+# Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
 
