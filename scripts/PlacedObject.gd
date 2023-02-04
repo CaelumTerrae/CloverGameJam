@@ -4,6 +4,8 @@ class_name PlacedObject extends Node
 # PlacedObjects keeps track of the metadata of placed objects
 # like seeds or rocks in the world.
 
+# cant type with enums in gdscript
+# this is typed as PlaceableType
 var seed_type
 var position : Vector2
 var direction_facing = Direction.Direction.EAST
@@ -62,3 +64,6 @@ func execute_grow_simple():
 		Direction.Direction.WEST:
 			next_growth_positions = [temp + Vector2(-1,0)]
 	return [temp]
+
+func get_object_type():
+	return seed_type

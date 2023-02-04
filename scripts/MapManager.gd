@@ -65,6 +65,30 @@ func load_level(dirt_tm: TileMap, obstacle_tm: TileMap, seed_tm: TileMap):
 	representation_array = generate_representation_array()
 	print_representation_array()
 
+# this is a very large function that will take all available
+# information across the game state and use it to render out the display!
+# it should only really have to make updates to the seed_tilemap
+func render_to_display():
+	# clear before re-displaying
+
+	seed_tilemap.clear()
+	# iterate over the plant stack in order to determine which placed_objects to render on the screen layer
+	var placed_stack = GameManager.placed_stack.stack
+	for placed_object in placed_stack:
+		var tilemap_pos : Vector2 = rep_pos_to_tilemap_pos(placed_object.get_position())
+		var object_type_name = placed_object.get_object_type()
+		seed_tilemap.set_cellv(tilemap_pos, get_tile_from_seed_name(object_type_name))
+	
+	# iterate over the rep_array to place roots and other thingies:
+	for x in range(len(representation_array)):
+		for y in range(len(representation_array[0])):
+			var rep_pos = Vector2(x,y)
+			if get_in_rep_array(rep_pos) == TILE_STATES.ROOT_OCCUPIED:
+				# place root on tilemap by placing correct tile in visual representation
+				seed_tilemap.set_cellv(rep_pos_to_tilemap_pos(rep_pos), root_tile_num)
+	pass
+
+
 
 # this will generate the representation array (uninitialized)
 func generate_representation_array():
@@ -142,26 +166,19 @@ func rep_pos_to_tilemap_pos(rep_pos: Vector2):
 	return rep_pos + offset
 
 func place_root(rep_pos):
-	# place root on tilemap by placing correct tile in visual representation
-	seed_tilemap.set_cellv(rep_pos_to_tilemap_pos(rep_pos), root_tile_num)
-
 	# place root in rep array
 	set_in_rep_array(rep_pos, TILE_STATES.ROOT_OCCUPIED);
+	render_to_display()
 
 
 func place_object(pos_from_tilemap, current_object_in_cursor):
-	# place seed in tilemap by placing correct tile in visual representation
-	seed_tilemap.set_cellv(pos_from_tilemap, get_tile_from_seed_name(current_object_in_cursor))
-
 	# place seed in representation array
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	if object_is_plant(current_object_in_cursor):
 		set_in_rep_array(representation_position, TILE_STATES.PLANT_OCCUPIED)
 	else:
 		set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
-
-	# create newly placed object with reference to the current map manager
-	return GameManager.construct_placed_object_from_seed_type(current_object_in_cursor, representation_position)
+	render_to_display()
 
 
 func object_is_plant(placeable_object_type):
@@ -173,29 +190,12 @@ func object_is_plant(placeable_object_type):
 		_:
 			return true
 
-
-
 # removes object and returns whatever was formerly there
 func remove_object(pos_from_tilemap):
-	# get what is currently there using seed tilemap
-	# eventually we would like to migrate off of using
-	# the tilemap to determine the seed so that
-	# visual representation is completely decoupled from abstract
-	# representation
-	var current_seed_in_tile_position = get_seed_name_from_tile(seed_tilemap.get_cellv(pos_from_tilemap))
-
-	# remove the object from the visual representation
-	seed_tilemap.set_cellv(pos_from_tilemap, -1)
-
 	# set position in rep_array to unoccupied
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	set_in_rep_array(representation_position, TILE_STATES.UNOCCUPIED)
-	print_representation_array()
-
-	# return seed_type that was removed so it can be refunded via seedstore
-	return current_seed_in_tile_position
-
-
+	render_to_display()
 
 func get_tile_from_seed_name(seed_type):
 	return seed_name_to_tile_map[seed_type]

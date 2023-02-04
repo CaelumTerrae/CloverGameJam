@@ -58,6 +58,8 @@ func iterate_growth() -> bool:
 		var to_place_arr = curr_placed_object.execute_grow()
 
 		# determine if the growth stage kills any plants
+		# before placing their objects on the map
+		# to avoid weird glitches
 		if any_plants_dead():
 			curr_game_state = GameState.LOST
 			print("duuuuude you lost the game! that sucks a ton!")
@@ -66,6 +68,13 @@ func iterate_growth() -> bool:
 		# if growth stage doesn't kill any plants
 		for position in to_place_arr:
 				MapManager.place_root(position)
+
+		# check if map updates killed plants
+		# (new roots can kill starving plants or whatever)
+		if any_plants_dead():
+			curr_game_state = GameState.LOST
+			print("duuuuude you lost the game! that sucks a ton!")
+			return false
 	print("made it through one iteration cycle")
 	curr_growth_level += 1
 	return true
@@ -119,22 +128,28 @@ func place_seed(tile_position):
 	
 	# use the map manager to place the seed both in abstract
 	# representation, and in tilemap simultaneously
-	var newly_placed_object = MapManager.place_object(tile_position, current_object_in_cursor)
-	placed_stack.add_placed_object(newly_placed_object)
+	var representation_position = MapManager.tilemap_pos_to_rep_pos(tile_position)
+	var new_placed_object = GameManager.construct_placed_object_from_seed_type(current_object_in_cursor, representation_position)
+	placed_stack.add_placed_object(new_placed_object)
 	print(placed_stack)
+	MapManager.place_object(tile_position, current_object_in_cursor)
+	
 		
 
 func remove_seed(tile_position):
 	if curr_game_state != GameState.PLANTING:
 		return
-	# when attempting to remove a seed, update the count
-	var current_seed_in_tile_position = MapManager.remove_object(tile_position)
+	
+	# remove any object that might've been at the tile from the stack
+	var rep_position = MapManager.tilemap_pos_to_rep_pos(tile_position)
+	var current_object_type_in_tile_position = placed_stack.remove_placed_object_at_tile(rep_position)
 
-	if current_seed_in_tile_position != PlaceableType.PlaceableType.EMPTY:
-		seed_store.give_seed(current_seed_in_tile_position)
+	# remove the object from the map
+	MapManager.remove_object(tile_position)
 
-	# remove the placement from the stack
-	placed_stack.remove_placed_object_at_tile(tile_position)
+	# update the count in the seed store
+	if current_object_type_in_tile_position != null:
+		seed_store.give_seed(current_object_type_in_tile_position)
 
 func reset_seed_tilemap():
 	seed_tilemap.clear()
