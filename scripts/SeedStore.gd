@@ -5,12 +5,23 @@ class_name SeedStore extends Node
 # as well as the current positions of seeds.
 
 var current_seed_counts = {
-	PlaceableType.PlaceableType.SIMPLE:5,
-	PlaceableType.PlaceableType.STARVING:5,
-	PlaceableType.PlaceableType.VINE:5,
-	PlaceableType.PlaceableType.CORROSIVE:5,
-	PlaceableType.PlaceableType.GREEDY:5,
-	PlaceableType.PlaceableType.TUNNELING:5,
+	PlaceableType.PlaceableType.SIMPLE:0,
+	PlaceableType.PlaceableType.STARVING:0,
+	PlaceableType.PlaceableType.VINE:0,
+	PlaceableType.PlaceableType.CORROSIVE:0,
+	PlaceableType.PlaceableType.GREEDY:0,
+	PlaceableType.PlaceableType.TUNNELING:0,
+	PlaceableType.PlaceableType.ROCK:0
+}
+
+var used_seed_counts = {
+	PlaceableType.PlaceableType.SIMPLE:0,
+	PlaceableType.PlaceableType.STARVING:0,
+	PlaceableType.PlaceableType.VINE:0,
+	PlaceableType.PlaceableType.CORROSIVE:0,
+	PlaceableType.PlaceableType.GREEDY:0,
+	PlaceableType.PlaceableType.TUNNELING:0,
+	PlaceableType.PlaceableType.ROCK:0
 }
 
 func _ready():
@@ -32,12 +43,21 @@ func has_seed(seed_type):
 	
 func use_seed(seed_type):
 	current_seed_counts[seed_type] -= 1
+	used_seed_counts[seed_type] += 1
 	
 func give_seed(seed_type):
 	current_seed_counts[seed_type] += 1
+	used_seed_counts[seed_type] -= 1
 
 func all_seed_count():
 	var counter = 0
 	for key in current_seed_counts:
 		counter += current_seed_counts[key]
 	return counter
+
+func reset_store():
+	print(current_seed_counts)
+	for key in used_seed_counts:
+		current_seed_counts[key] += used_seed_counts[key]
+		used_seed_counts[key] = 0
+	print(current_seed_counts)

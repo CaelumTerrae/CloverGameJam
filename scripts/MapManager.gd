@@ -50,7 +50,7 @@ enum TILE_STATES {
 	UNOCCUPIED, # free spaces
 	PLANT_OCCUPIED, # occupied by a plant
 	ROOT_OCCUPIED, # occupied by a root grown by a plant
-	OCCUPIED_CHANGEABLE, # spaces that are occupied but can be overwritten
+	PLACED_ROCK, # occupied by a rock
 	OCCUPIED_UNCHANGEABLE, # spaces that are occupied but cannot be overwritten
 }
 
@@ -183,7 +183,7 @@ func place_object(pos_from_tilemap, current_object_in_cursor):
 	if object_is_plant(current_object_in_cursor):
 		set_in_rep_array(representation_position, TILE_STATES.PLANT_OCCUPIED)
 	else:
-		set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
+		set_in_rep_array(representation_position, TILE_STATES.PLACED_ROCK)
 	render_to_display()
 
 
@@ -223,7 +223,7 @@ func can_overwrite_in_rep_array(pos_from_tilemap):
 	if not in_representation_bounds(rep_pos):
 		return false
 	var tile_state = get_in_rep_array(rep_pos)
-	return tile_state == TILE_STATES.UNOCCUPIED || tile_state == TILE_STATES.OCCUPIED_CHANGEABLE || tile_state == TILE_STATES.PLANT_OCCUPIED
+	return tile_state == TILE_STATES.UNOCCUPIED || tile_state == TILE_STATES.PLACED_ROCK || tile_state == TILE_STATES.PLANT_OCCUPIED
 
 func can_grow_into(rep_pos):
 	if not in_representation_bounds(rep_pos):
@@ -249,3 +249,28 @@ var direction_to_tile_mapping = {
 
 func get_tile_from_direction_enum(direction):
 	return direction_to_tile_mapping[direction]
+
+func clear_representation_array():
+	for i in range(len(representation_array)):
+		for j in range(len(representation_array[0])):
+			var rep_pos = Vector2(i,j)
+			var curr_tile = get_in_rep_array(rep_pos)
+			match curr_tile:
+				TILE_STATES.UNOCCUPIED:
+					# do nothing
+					continue
+				TILE_STATES.PLANT_OCCUPIED:
+					# update the plant space to be unoccupied
+					set_in_rep_array(rep_pos, TILE_STATES.UNOCCUPIED)
+				TILE_STATES.ROOT_OCCUPIED:
+					set_in_rep_array(rep_pos, TILE_STATES.UNOCCUPIED)
+				TILE_STATES.PLACED_ROCK:
+					set_in_rep_array(rep_pos, TILE_STATES.CHANGEABLE)
+	render_to_display()
+
+
+func reset_map():
+	# return the state to the level when it is initially loaded!
+	clear_representation_array()
+	print_representation_array()
+	pass
