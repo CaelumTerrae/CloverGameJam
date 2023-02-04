@@ -4,6 +4,7 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameManager.seed_tilemap = $SeedTileMap;
+	MapManager.direction_tilemap = $ForegroundNode/DirectionalityTileMap;
 	$GUINode/Control.connect("seed_changed", self, "_on_seed_changed")
 	$GUINode/Control.connect("start_watering_state", self, "_start_watering_state")
 	
@@ -28,7 +29,7 @@ func _unhandled_input(event):
 		if event.button_index == BUTTON_LEFT:
 			GameManager.left_click_handler(mouse_tile)
 		elif event.button_index == BUTTON_RIGHT:
-			GameManager.remove_seed(mouse_tile)
+			GameManager.right_click_handler(mouse_tile)
 			
 func load_level(level_resource_path: String):
 	# 1. handle logic for loading the scene into the object tree

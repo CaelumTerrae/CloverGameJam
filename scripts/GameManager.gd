@@ -38,7 +38,7 @@ func left_click_handler(mouse_tile):
 
 func right_click_handler(mouse_tile):
 	if curr_game_state == GameState.PLANTING:
-		remove_seed(mouse_tile)
+		rotate_object(mouse_tile)
 
 # iterates over plants to see if any have died
 func any_plants_dead():
@@ -97,6 +97,19 @@ func start_watering_cycle():
 	curr_game_state = GameState.WATERING
 	print(curr_game_state)
 	run_water_cycle()
+
+func rotate_object(tile_position):
+	if curr_game_state != GameState.PLANTING:
+		return
+	var rep_position = MapManager.tilemap_pos_to_rep_pos(tile_position)
+	var placed_object = placed_stack.get_placed_object_at_tile(rep_position)
+	if placed_object != null:
+		print("old direction", placed_object.get_direction())
+		placed_object.rotate_orientation()
+		print("new direction", placed_object.get_direction())
+	# manually let the map manager know to update the map
+	MapManager.render_to_display()
+	
 
 func place_seed(tile_position):
 	if curr_game_state != GameState.PLANTING:
