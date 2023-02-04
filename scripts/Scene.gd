@@ -10,7 +10,7 @@ func _ready():
 	
 	
 	# initially load level 1 into the scene by adding it as a child of LevelNode
-	load_level("res://levels/World1/World1_Level1.tscn")
+	load_level("res://levels/World1_Level1.tscn")
 	pass
 	
 # returns the scaled global position of the mouse.

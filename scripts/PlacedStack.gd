@@ -27,7 +27,9 @@ func remove_placed_object_at_tile(position: Vector2):
 		index += 1
 	# we found an object with the position
 	if index < len(stack):
-		stack.pop_at(index)
+		var placed_object : PlacedObject = stack.pop_at(index)
+		return placed_object.get_object_type()
+	return null
 
 # returns reference to an object at a given position in the tile
 # if there is no such object, return null

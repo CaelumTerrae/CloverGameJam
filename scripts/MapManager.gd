@@ -169,26 +169,19 @@ func rep_pos_to_tilemap_pos(rep_pos: Vector2):
 	return rep_pos + offset
 
 func place_root(rep_pos):
-	# place root on tilemap by placing correct tile in visual representation
-	seed_tilemap.set_cellv(rep_pos_to_tilemap_pos(rep_pos), root_tile_num)
-
 	# place root in rep array
 	set_in_rep_array(rep_pos, TILE_STATES.ROOT_OCCUPIED);
+	render_to_display()
 
 
 func place_object(pos_from_tilemap, current_object_in_cursor):
-	# place seed in tilemap by placing correct tile in visual representation
-	seed_tilemap.set_cellv(pos_from_tilemap, get_tile_from_seed_name(current_object_in_cursor))
-
 	# place seed in representation array
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	if object_is_plant(current_object_in_cursor):
 		set_in_rep_array(representation_position, TILE_STATES.PLANT_OCCUPIED)
 	else:
 		set_in_rep_array(representation_position, TILE_STATES.OCCUPIED_CHANGEABLE)
-
-	# create newly placed object with reference to the current map manager
-	return GameManager.construct_placed_object_from_seed_type(current_object_in_cursor, representation_position)
+	render_to_display()
 
 
 func object_is_plant(placeable_object_type):
@@ -200,29 +193,12 @@ func object_is_plant(placeable_object_type):
 		_:
 			return true
 
-
-
 # removes object and returns whatever was formerly there
 func remove_object(pos_from_tilemap):
-	# get what is currently there using seed tilemap
-	# eventually we would like to migrate off of using
-	# the tilemap to determine the seed so that
-	# visual representation is completely decoupled from abstract
-	# representation
-	var current_seed_in_tile_position = get_seed_name_from_tile(seed_tilemap.get_cellv(pos_from_tilemap))
-
-	# remove the object from the visual representation
-	seed_tilemap.set_cellv(pos_from_tilemap, -1)
-
 	# set position in rep_array to unoccupied
 	var representation_position = tilemap_pos_to_rep_pos(pos_from_tilemap)
 	set_in_rep_array(representation_position, TILE_STATES.UNOCCUPIED)
-	print_representation_array()
-
-	# return seed_type that was removed so it can be refunded via seedstore
-	return current_seed_in_tile_position
-
-
+	render_to_display()
 
 func get_tile_from_seed_name(seed_type):
 	return seed_name_to_tile_map[seed_type]
